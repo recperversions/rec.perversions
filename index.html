@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rec Perversions - Esplora e Connetti</title>
+    <!-- Tailwind CSS per un design moderno e pulito -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome per le icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f0f13',
+                        cardBg: '#181820',
+                        accentPink: '#e91e63',
+                        accentHover: '#c2185b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="showSection('home')">
+                <span class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
+                    REC PERVERSIONS
+                </span>
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                <button onclick="showSection('home')" class="hover:text-accentPink transition">Scopri</button>
+                <button onclick="showSection('matches')" class="hover:text-accentPink transition">Profili</button>
+                <button onclick="showSection('chat')" class="hover:text-accentPink transition">Messaggi</button>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <button onclick="openLoginModal()" class="px-4 py-2 text-sm font-semibold text-white bg-gray-800 hover:bg-gray-700 rounded-full transition">Accedi</button>
+                <button onclick="openRegisterModal()" class="px-4 py-2 text-sm font-semibold text-white bg-accentPink hover:bg-accentHover rounded-full transition shadow-lg shadow-pink-900/30">Registrati</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+
+        <!-- Sezione Home (Landing & Matching rapido) -->
+        <section id="home-section" class="space-y-8">
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-purple-900 via-pink-900 to-gray-900 p-8 md:p-16 text-center shadow-2xl border border-pink-500/20">
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">Trova la tua sintonia senza tabù</h1>
+                <p class="text-gray-300 max-w-2xl mx-auto mb-8 text-sm md:text-base">Unisciti alla community esclusiva dove esprimere liberamente i tuoi desideri e connettersi con persone affini.</p>
+                <button onclick="showSection('matches')" class="px-8 py-3 bg-accentPink hover:bg-accentHover text-white font-bold rounded-full shadow-lg transition transform hover:scale-105">Inizia Subito</button>
+            </div>
+
+            <!-- In Evidenza -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-fire text-accentPink"></i> Profili in primo piano</h2>
+                <div id="featured-profiles" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Generato via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Sezione Profili / Matches -->
+        <section id="matches-section" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold">Community Members</h2>
+                <div class="flex gap-2">
+                    <select id="filter-gender" onchange="filterProfiles()" class="bg-cardBg border border-gray-700 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-accentPink">
+                        <option value="all">Tutti</option>
+                        <option value="female">Donne</option>
+                        <option value="male">Uomini</option>
+                        <option value="couple">Coppie</option>
+                    </select>
+                </div>
+            </div>
+            <div id="all-profiles" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Generato via JS -->
+            </div>
+        </section>
+
+        <!-- Sezione Chat -->
+        <section id="chat-section" class="hidden grid grid-cols-1 md:grid-cols-3 bg-cardBg rounded-2xl border border-gray-800 overflow-hidden h-[600px]">
+            <div class="border-r border-gray-800 p-4 overflow-y-auto">
+                <h3 class="font-bold mb-4 text-gray-400 text-sm uppercase tracking-wider">Conversazioni</h3>
+                <div id="chat-list" class="space-y-2">
+                    <!-- Lista contatti chat -->
+                </div>
+            </div>
+            <div class="col-span-2 flex flex-col justify-between">
+                <div id="chat-header" class="p-4 border-b border-gray-800 font-semibold flex items-center gap-3">
+                    <span class="w-3 h-3 bg-green-500 rounded-full"></span> Seleziona una chat
+                </div>
+                <div id="chat-messages" class="p-4 overflow-y-auto flex-grow space-y-4 text-sm text-gray-300">
+                    <div class="text-center text-gray-500 my-auto">Seleziona un utente dalla lista a sinistra per iniziare a chattare.</div>
+                </div>
+                <div class="p-4 border-t border-gray-800 flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Scrivi un messaggio..." class="flex-grow bg-darkBg border border-gray-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-accentPink">
+                    <button onclick="sendMessage()" class="bg-accentPink hover:bg-accentHover px-5 py-2 rounded-lg font-semibold text-sm transition">Invia</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sezione Pannello Admin (Protetto) -->
+        <section id="admin-section" class="hidden space-y-6">
+            <div class="flex justify-between items-center bg-cardBg p-6 rounded-2xl border border-gray-800">
+                <div>
+                    <h2 class="text-2xl font-bold text-accentPink">Pannello di Amministrazione</h2>
+                    <p class="text-sm text-gray-400">Gestisci utenti, contenuti e configurazioni del sito.</p>
+                </div>
+                <button onclick="adminLogout()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-sm font-semibold rounded-lg transition">Esci da Admin</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-cardBg p-6 rounded-2xl border border-gray-800">
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase">Utenti Totali</h3>
+                    <p class="text-3xl font-extrabold mt-2" id="admin-user-count">1,248</p>
+                </div>
+                <div class="bg-cardBg p-6 rounded-2xl border border-gray-800">
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase">Messaggi Scambiati</h3>
+                    <p class="text-3xl font-extrabold mt-2 text-pink-500" id="admin-msg-count">14,892</p>
+                </div>
+                <div class="bg-cardBg p-6 rounded-2xl border border-gray-800">
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase">Stato Sistema</h3>
+                    <p class="text-xl font-bold mt-2 text-green-500"><i class="fa-solid fa-circle text-xs"></i> Online / Attivo</p>
+                </div>
+            </div>
+            <div class="bg-cardBg p-6 rounded-2xl border border-gray-800">
+                <h3 class="font-bold mb-4 text-lg">Gestione Rapida Utenti</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-darkBg text-gray-400 uppercase text-xs">
+                            <tr>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">Età/Genere</th>
+                                <th class="p-3">Stato</th>
+                                <th class="p-3">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table">
+                            <!-- Popolato via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cardBg border-t border-gray-800 py-6 text-center text-xs text-gray-500 space-y-2">
+        <p>&copy; 2026 Rec Perversions. Tutti i diritti riservati. Vietato ai minori di 18 anni.</p>
+        <p>
+            <a href="#" onclick="openAdminLoginModal()" class="hover:text-accentPink transition underline">Area Amministrazione (Admin)</a>
+        </p>
+    </footer>
+
+    <!-- Modale Login Utente -->
+    <div id="login-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-cardBg border border-gray-800 rounded-2xl p-6 max-w-md w-full space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold">Accedi a Rec Perversions</h3>
+                <button onclick="closeModal('login-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <input type="email" placeholder="Email" class="w-full bg-darkBg border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accentPink">
+            <input type="password" placeholder="Password" class="w-full bg-darkBg border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accentPink">
+            <button onclick="alert('Accesso simulato completato con successo!'); closeModal('login-modal');" class="w-full bg-accentPink hover:bg-accentHover py-2.5 rounded-lg font-bold text-sm transition">Accedi</button>
+        </div>
+    </div>
+
+    <!-- Modale Login Admin -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-cardBg border border-gray-800 rounded-2xl p-6 max-w-md w-full space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-accentPink">Accesso Amministratore</h3>
+                <button onclick="closeModal('admin-login-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-gray-400">Inserisci le credenziali di amministratore:</p>
+            <input type="text" id="admin-user-input" placeholder="Username (admin)" class="w-full bg-darkBg border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accentPink">
+            <input type="password" id="admin-pass-input" placeholder="Password (recperversions2026)" class="w-full bg-darkBg border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accentPink">
+            <button onclick="verifyAdminLogin()" class="w-full bg-accentPink hover:bg-accentHover py-2.5 rounded-lg font-bold text-sm transition">Entra come Admin</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logica -->
+    <script>
+        // Dati di esempio per i profili
+        const profiles = [
+            { id: 1, name: "Valentina", age: 26, city: "Milano", gender: "female", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80", bio: "Curiosa e aperta a nuove esperienze..." },
+            { id: 2, name: "Marco & Sara", age: 31, city: "Roma", gender: "couple", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80", bio: "Coppia aperta cerca anime affini per serate uniche." },
+            { id: 3, name: "Elena", age: 29, city: "Torino", gender: "female", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80", bio: "Vivi e lascia vivere. Amante della trasgressione elegante." },
+            { id: 4, name: "Alex", age: 34, city: "Bologna", gender: "male", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80", bio: "Spirito libero, discreto e rispettoso." }
+        ];
+
+        function renderProfiles(filter = 'all') {
+            const container = document.getElementById('all-profiles');
+            const featuredContainer = document.getElementById('featured-profiles');
+            container.innerHTML = '';
+            if(featuredContainer) featuredContainer.innerHTML = '';
+
+            const filtered = filter === 'all' ? profiles : profiles.filter(p => p.gender === filter);
+
+            filtered.forEach(p => {
+                const card = `
+                    <div class="bg-cardBg rounded-2xl overflow-hidden border border-gray-800 hover:border-pink-500/50 transition group">
+                        <div class="relative h-72 overflow-hidden">
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                                <h3 class="text-lg font-bold text-white">${p.name}, ${p.age}</h3>
+                                <p class="text-xs text-gray-300"><i class="fa-solid fa-location-dot text-accentPink"></i> ${p.city}</p>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            <p class="text-xs text-gray-400 line-clamp-2">${p.bio}</p>
+                            <button onclick="startChat('${p.name}')" class="w-full py-2 bg-gray-800 hover:bg-accentPink text-xs font-bold rounded-lg transition">Messaggia</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+                if(featuredContainer && featuredContainer.children.length < 4) {
+                    featuredContainer.innerHTML += card;
+                }
+            });
+        }
+
+        function filterProfiles() {
+            const val = document.getElementById('filter-gender').value;
+            renderProfiles(val);
+        }
+
+        function showSection(sectionId) {
+            ['home-section', 'matches-section', 'chat-section', 'admin-section'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId + '-section').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); document.getElementById('login-modal').classList.add('flex'); }
+        function openRegisterModal() { openLoginModal(); }
+        function openAdminLoginModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-login-modal').classList.add('flex'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+
+        function verifyAdminLogin() {
+            const user = document.getElementById('admin-user-input').value;
+            const pass = document.getElementById('admin-pass-input').value;
+            if (user === 'admin' && pass === 'recperversions2026') {
+                closeModal('admin-login-modal');
+                showSection('admin');
+                renderAdminUsers();
+            } else {
+                alert('Credenziali admin non valide! Usa admin / recperversions2026');
+            }
+        }
+
+        function adminLogout() {
+            showSection('home');
+        }
+
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-users-table');
+            tbody.innerHTML = '';
+            profiles.forEach(p => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                        <td class="p-3 font-semibold">${p.name}</td>
+                        <td class="p-3">${p.age} anni (${p.gender})</td>
+                        <td class="p-3"><span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">Attivo</span></td>
+                        <td class="p-3"><button onclick="alert('Utente gestito')" class="text-accentPink hover:underline text-xs font-bold">Gestisci</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function startChat(name) {
+            showSection('chat');
+            document.getElementById('chat-header').innerHTML = `<span class="w-3 h-3 bg-green-500 rounded-full"></span> Chat con ${name}`;
+            document.getElementById('chat-messages').innerHTML = `<div class="p-3 bg-gray-800/50 rounded-lg max-w-xs text-xs">Ciao! Ti va di fare due chiacchiere?</div>`;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            if(!input.value.trim()) return;
+            const msgs = document.getElementById('chat-messages');
+            msgs.innerHTML += `<div class="p-3 bg-pink-900/30 border border-pink-500/20 rounded-lg max-w-xs ml-auto text-xs">${input.value}</div>`;
+            input.value = '';
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        // Inizializzazione
+        renderProfiles();
+    </script>
+</body>
+</html>
